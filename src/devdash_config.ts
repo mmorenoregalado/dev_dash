@@ -10,16 +10,16 @@ export const config: DevdashConfig = {
 	github_access_token: process.env.REACT_APP_GITHUB_PERSONAL_ACCESS_TOKEN as string,
 	widgets: [
 		{
-			id: "71b2b455-9698-4805-ab6b-f1b1059f89aa",
-			repository_url: "https://github.com/mmorenoregalado/vue-tooltipper",
+			id: "2565fa91-2ac4-4e4f-9111-6d27a598082d",
+			repository_url: "https://github.com/CodelyTV/dotly",
 		},
 		{
-			id: "12976f91-9821-45ad-9cc2-c29e3ff956ea",
-			repository_url: "https://github.com/mmorenoregalado/vue-tooltipper",
+			id: "a66d5092-5ba6-4184-9931-cc485defe412",
+			repository_url: "https://github.com/CodelyTV/eslint-plugin-hexagonal-architecture",
 		},
 		{
-			id: "d6d58f2a-8e87-44de-8719-0011cc361251",
-			repository_url: "https://github.com/mmorenoregalado/vue-tooltipper",
+			id: "7c7a6b71-76dc-42ce-a46b-1730fc758193",
+			repository_url: "https://github.com/CodelyTV/refactoring-code-smells",
 		},
 	],
 };
