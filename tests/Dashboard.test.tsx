@@ -1,28 +1,24 @@
 import { render, screen } from "@testing-library/react";
+import { mock } from "jest-mock-extended";
 
-import { githubApiResponses } from "../src/github_api_responses";
-import { GitHubApiGitHubRepositoryRepository } from "../src/infrastructure/GitHubApiGitHubRepositoryRepository";
+import { GitHubRepositoryRepository } from "../src/domain/GitHubRepositoryRepository";
 import { Dashboard } from "../src/sections/dashboard/Dashboard";
+import { GitHubRepositoryMother } from "./GitHubRepositoryMother";
 
-jest.mock("../src/infrastructure/GitHubApiGitHubRepositoryRepository");
-const mockRepository =
-	GitHubApiGitHubRepositoryRepository as jest.Mock<GitHubApiGitHubRepositoryRepository>;
+const mockRepository = mock<GitHubRepositoryRepository>();
 
 describe("Dashboard section", () => {
 	it("show all widgets", async () => {
-		mockRepository.mockImplementationOnce(() => {
-			return {
-				search: () => Promise.resolve(githubApiResponses),
-			} as unknown as GitHubApiGitHubRepositoryRepository;
-		});
+		const gitHubRepository = GitHubRepositoryMother.create();
+		mockRepository.search.mockResolvedValue([gitHubRepository]);
 
-		render(<Dashboard />);
+		render(<Dashboard repository={mockRepository} />);
 
 		const title = await screen.findByRole("heading", {
 			name: new RegExp("DevDash_", "i"),
 		});
 
-		const firstWidgetTitle = `${githubApiResponses[0].repositoryData.organization.login}/${githubApiResponses[0].repositoryData.name}`;
+		const firstWidgetTitle = `${gitHubRepository.id.organization}/${gitHubRepository.id.name}`;
 		const firstWidgetHeader = await screen.findByRole("heading", {
 			name: new RegExp(firstWidgetTitle, "i"),
 		});
@@ -32,30 +28,19 @@ describe("Dashboard section", () => {
 	});
 
 	it("show not results message when there are no widgets", async () => {
-		mockRepository.mockImplementationOnce(() => {
-			return {
-				search: () => Promise.resolve([]),
-			} as unknown as GitHubApiGitHubRepositoryRepository;
-		});
+		mockRepository.search.mockResolvedValue([]);
 
-		render(<Dashboard />);
-
+		render(<Dashboard repository={mockRepository} />);
 		const noResults = await screen.findByText(new RegExp("No hay widgets configurados", "i"));
 
 		expect(noResults).toBeInTheDocument();
 	});
 
 	it("show last modified date in human readable format", async () => {
-		const mockedResponse = [...githubApiResponses];
-		mockedResponse[0].repositoryData.updated_at = new Date().toISOString();
+		const gitHubRepository = GitHubRepositoryMother.create({ updatedAt: new Date() });
+		mockRepository.search.mockResolvedValue([gitHubRepository]);
 
-		mockRepository.mockImplementationOnce(() => {
-			return {
-				search: () => Promise.resolve(githubApiResponses),
-			} as unknown as GitHubApiGitHubRepositoryRepository;
-		});
-
-		render(<Dashboard />);
+		render(<Dashboard repository={mockRepository} />);
 
 		const modificationDate = await screen.findByText(new RegExp("today", "i"));
 
