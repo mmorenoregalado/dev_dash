@@ -25,7 +25,7 @@ export function Dashboard({ repository }: { repository: GitHubRepositoryReposito
 					{repositoryData.map((widget) => (
 						<GitHubRepositoryWidget
 							key={`${widget.id.organization}/${widget.id.name}`}
-							widget={widget}
+							repository={widget}
 						/>
 					))}
 				</section>
