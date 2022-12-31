@@ -1,4 +1,4 @@
-export interface DevdashConfig {
+export interface DevDashConfig {
 	github_access_token: string;
 	widgets: {
 		id: string;
@@ -6,7 +6,7 @@ export interface DevdashConfig {
 	}[];
 }
 
-export const config: DevdashConfig = {
+export const config: DevDashConfig = {
 	github_access_token: process.env.REACT_APP_GITHUB_PERSONAL_ACCESS_TOKEN as string,
 	widgets: [
 		{
