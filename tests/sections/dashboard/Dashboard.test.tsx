@@ -6,60 +6,67 @@ import { RepositoryWidgetRepository } from "../../../src/domain/RepositoryWidget
 import { Dashboard } from "../../../src/sections/dashboard/Dashboard";
 import { GitHubRepositoryMother } from "../../GitHubRepositoryMother";
 import { renderWithRouter } from "../../renderWithRouter";
+import { RepositoryWidgetMother } from "../../RepositoryWidgetMother";
 
 const mockGitHubRepositoryRepository = mock<GitHubRepositoryRepository>();
 const mockWidgetRepository = mock<RepositoryWidgetRepository>();
 
 describe("Dashboard section", () => {
-	it("show all widgets", async () => {
-		const gitHubRepository = GitHubRepositoryMother.create();
+  it("show all widgets", async () => {
+    const gitHubRepository = GitHubRepositoryMother.create();
+    const repositoryWidget = RepositoryWidgetMother.create();
 
-		mockGitHubRepositoryRepository.search.mockResolvedValue([gitHubRepository]);
+    mockGitHubRepositoryRepository.search.mockResolvedValue([gitHubRepository]);
 
-		renderWithRouter(
-			<Dashboard
-				gitHubRepositoryRepository={mockGitHubRepositoryRepository}
-				repositoryWidgetRepository={mockWidgetRepository}
-			/>
-		);
+    renderWithRouter(
+      <Dashboard
+        gitHubRepositoryRepository={mockGitHubRepositoryRepository}
+        repositoryWidgetRepository={mockWidgetRepository}
+        repositoryWidgets={[repositoryWidget]}
+      />
+    );
 
-		const firstWidgetTitle = `${gitHubRepository.id.organization}/${gitHubRepository.id.name}`;
-		const firstWidgetHeader = await screen.findByRole("heading", {
-			name: new RegExp(firstWidgetTitle, "i"),
-		});
+    const firstWidgetTitle = `${gitHubRepository.id.organization}/${gitHubRepository.id.name}`;
+    const firstWidgetHeader = await screen.findByRole("heading", {
+      name: new RegExp(firstWidgetTitle, "i"),
+    });
 
-		expect(firstWidgetHeader).toBeInTheDocument();
-	});
+    expect(firstWidgetHeader).toBeInTheDocument();
+  });
 
-	it("show not results message when there are no widgets", async () => {
-		mockGitHubRepositoryRepository.search.mockResolvedValue([]);
+  it("show not results message when there are no widgets", async () => {
+    mockGitHubRepositoryRepository.search.mockResolvedValue([]);
+    const repositoryWidget = RepositoryWidgetMother.create();
 
-		renderWithRouter(
-			<Dashboard
-				gitHubRepositoryRepository={mockGitHubRepositoryRepository}
-				repositoryWidgetRepository={mockWidgetRepository}
-			/>
-		);
+    renderWithRouter(
+      <Dashboard
+        gitHubRepositoryRepository={mockGitHubRepositoryRepository}
+        repositoryWidgetRepository={mockWidgetRepository}
+        repositoryWidgets={[repositoryWidget]}
+      />
+    );
 
-		const noResults = await screen.findByText(new RegExp("No hay widgets configurados", "i"));
+    const noResults = await screen.findByText(new RegExp("No hay widgets configurados", "i"));
 
-		expect(noResults).toBeInTheDocument();
-	});
+    expect(noResults).toBeInTheDocument();
+  });
 
-	it("show last modified date in human readable format", async () => {
-		const gitHubRepository = GitHubRepositoryMother.create({ updatedAt: new Date() });
+  it("show last modified date in human readable format", async () => {
+    const gitHubRepository = GitHubRepositoryMother.create({ updatedAt: new Date() });
+    const repositoryWidget = RepositoryWidgetMother.create();
 
-		mockGitHubRepositoryRepository.search.mockResolvedValue([gitHubRepository]);
+    mockGitHubRepositoryRepository.search.mockResolvedValue([gitHubRepository]);
 
-		renderWithRouter(
-			<Dashboard
-				gitHubRepositoryRepository={mockGitHubRepositoryRepository}
-				repositoryWidgetRepository={mockWidgetRepository}
-			/>
-		);
+    renderWithRouter(
+      <Dashboard
+        gitHubRepositoryRepository={mockGitHubRepositoryRepository}
+        repositoryWidgetRepository={mockWidgetRepository}
+        repositoryWidgets={[repositoryWidget]}
+      />
+    );
 
-		const modificationDate = await screen.findByText(new RegExp("today", "i"));
+    const modificationDate = await screen.findByText(new RegExp("today", "i"));
 
-		expect(modificationDate).toBeInTheDocument();
-	});
+    expect(modificationDate).toBeInTheDocument();
+  });
 });

@@ -2,12 +2,24 @@ import { RepositoryWidget } from "../domain/RepositoryWidget";
 import { RepositoryWidgetRepository } from "../domain/RepositoryWidgetRepository";
 
 export class LocalStorageRepositoryWidgetRepository implements RepositoryWidgetRepository {
-	async search(): Promise<RepositoryWidget[]> {
-		return Promise.resolve([]);
-	}
+  localStorageKey = "repositoryWidgets";
+  async search(): Promise<RepositoryWidget[]> {
+    const data = localStorage.getItem(this.localStorageKey);
 
-	// eslint-disable-next-line unused-imports/no-unused-vars
-	async save(widget: RepositoryWidget): Promise<void> {
-		await Promise.resolve();
-	}
+    if (!data) {
+      return Promise.resolve([]);
+    }
+
+    return Promise.resolve(JSON.parse(data) as RepositoryWidget[]);
+  }
+
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  async save(widget: RepositoryWidget): Promise<void> {
+    const currentRepositoryWidget = await this.search();
+
+    localStorage.setItem(
+      this.localStorageKey,
+      JSON.stringify(currentRepositoryWidget.concat(widget))
+    );
+  }
 }

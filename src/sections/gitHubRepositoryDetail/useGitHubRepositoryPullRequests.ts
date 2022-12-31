@@ -5,22 +5,22 @@ import { GitHubRepositoryPullRequest } from "../../domain/GitHubRepositoryPullRe
 import { GitHubRepositoryPullRequestRepository } from "../../domain/GitHubRepositoryPullRequestRepository";
 
 export function useGitHubRepositoryPullRequests(
-	repository: GitHubRepositoryPullRequestRepository,
-	repositoryId: RepositoryId
+  repository: GitHubRepositoryPullRequestRepository,
+  repositoryId: RepositoryId
 ): { isLoading: boolean; pullRequests: GitHubRepositoryPullRequest[] } {
-	const [pullRequests, setPullRequests] = useState<GitHubRepositoryPullRequest[]>([]);
-	const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [pullRequests, setPullRequests] = useState<GitHubRepositoryPullRequest[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-	useEffect(() => {
-		setIsLoading(true);
-		repository.search(repositoryId).then((pullRequests) => {
-			setPullRequests(pullRequests);
-			setIsLoading(false);
-		});
-	}, [repository, repositoryId]);
+  useEffect(() => {
+    setIsLoading(true);
+    repository.search(repositoryId).then((pullRequests) => {
+      setPullRequests(pullRequests);
+      setIsLoading(false);
+    });
+  }, [repository, repositoryId]);
 
-	return {
-		pullRequests,
-		isLoading,
-	};
+  return {
+    pullRequests,
+    isLoading,
+  };
 }

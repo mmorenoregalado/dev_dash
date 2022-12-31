@@ -6,19 +6,19 @@ import { GitHubApiGitHubRepositoryRepository } from "../../infrastructure/GitHub
 import { GitHubRepositoryDetail } from "./GitHubRepositoryDetail";
 
 const gitHubRepositoryRepository = new GitHubApiGitHubRepositoryRepository(
-	config.github_access_token
+  config.github_access_token
 );
 const gitHubRepositoryPullRequestRepository = new GitHubApiGitHubRepositoryPullRequestRepository(
-	config.github_access_token
+  config.github_access_token
 );
 
 export class GitHubRepositoryDetailFactory {
-	static create(): React.ReactElement {
-		return (
-			<GitHubRepositoryDetail
-				gitHubRepositoryRepository={gitHubRepositoryRepository}
-				gitHubRepositoryPullRequestRepository={gitHubRepositoryPullRequestRepository}
-			/>
-		);
-	}
+  static create(): React.ReactElement {
+    return (
+      <GitHubRepositoryDetail
+        gitHubRepositoryRepository={gitHubRepositoryRepository}
+        gitHubRepositoryPullRequestRepository={gitHubRepositoryPullRequestRepository}
+      />
+    );
+  }
 }
